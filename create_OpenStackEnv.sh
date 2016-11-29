@@ -1,5 +1,5 @@
 #!/bin/bash
-#nova keypair-add --pub-key ~/.ssh/id_rsa.pub pitop
+#nova keypair-add --pub-key ~/.ssh/id_rsa.pub switchy
 
 get_floating_ip() {
   openstack ip floating list -f value -c "Floating IP Address" -c Port | grep 'None'  | head -1 | cut -f1 -d" "
@@ -33,24 +33,24 @@ neutron port-create --name Net3_PC3 Net3
 
 
 nova boot --flavor c1.micro --image "Debian Jessie 8 (SWITCHengines)" \
-  --key-name=pitop --nic net-name=private --poll PC1 &
+  --key-name=switchy --nic net-name=private --poll PC1 &
 
 nova boot --flavor c1.micro --image "Debian Jessie 8 (SWITCHengines)" \
-  --key-name=pitop --nic net-name=private --poll R1 & 
+  --key-name=switchy --nic net-name=private --poll R1 & 
 
 nova boot --flavor c1.micro --image "Debian Jessie 8 (SWITCHengines)" \
-  --key-name=pitop --nic net-name=private --poll R2 &
+  --key-name=switchy --nic net-name=private --poll R2 &
 
 nova boot --flavor c1.micro --image "Debian Jessie 8 (SWITCHengines)" \
-  --key-name=pitop --nic net-name=private --poll R3 &
+  --key-name=switchy --nic net-name=private --poll R3 &
 
 nova boot --flavor c1.micro --image "Debian Jessie 8 (SWITCHengines)" \
-  --key-name=pitop --nic net-name=private --poll PC2 &
+  --key-name=switchy --nic net-name=private --poll PC2 &
 
 nova boot --flavor c1.micro --image "Debian Jessie 8 (SWITCHengines)" \
-  --key-name=pitop --nic net-name=private --poll PC3 &
+  --key-name=switchy --nic net-name=private --poll PC3 &
 
-sleep 30
+sleep 90
 
 nova interface-attach --port-id $(neutron port-show -F id -f value Net1_PC1) PC1
 
@@ -72,9 +72,9 @@ nova interface-attach --port-id $(neutron port-show -F id -f value Net3_PC3) PC3
 
 
 
-openstack ip floating add $(get_floating_ip) R1
-openstack ip floating add $(get_floating_ip) R2
-openstack ip floating add $(get_floating_ip) R3
-openstack ip floating add $(get_floating_ip) PC1
-openstack ip floating add $(get_floating_ip) PC2
-openstack ip floating add $(get_floating_ip) PC3
+openstack server add floating ip R1 $(get_floating_ip) 
+openstack server add floating ip R2 $(get_floating_ip) 
+openstack server add floating ip R3 $(get_floating_ip) 
+openstack server add floating ip PC1 $(get_floating_ip) 
+openstack server add floating ip PC2 $(get_floating_ip) 
+openstack server add floating ip PC3 $(get_floating_ip) 
